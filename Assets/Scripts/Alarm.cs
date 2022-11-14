@@ -15,12 +15,14 @@ public class Alarm : MonoBehaviour
             _audioSource.Play();
             _audioSource.volume = 0;
 
+            StopCoroutine(DecreaseSound()); ;
             var increaseSound = StartCoroutine(IncreaseSound());
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
+        StopCoroutine(IncreaseSound());
         _audioSource.Play();
         var decreaseSound = StartCoroutine(DecreaseSound());
     }
