@@ -31,10 +31,7 @@ public class Spawner : MonoBehaviour
     {
         while(_isWorking)
         {
-            Transform spawner = _spawners[_spawnPoint];
-            Enemy gameObject = Instantiate(_enemy);
-            Transform newObjectTransform = gameObject.GetComponent<Transform>();
-            newObjectTransform.position = spawner.position;
+            Instantiate(_enemy, _spawners[_spawnPoint].position, _spawners[_spawnPoint].rotation);
             _spawnPoint++;
 
             if (_spawnPoint > _spawners.Length - 1)

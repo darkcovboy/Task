@@ -7,41 +7,38 @@ public class Alarm : MonoBehaviour
     private AudioSource _audioSource;
     private readonly float _recoveryRate = 0.3f;
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    public void PlaySound()
     {
-        if(collision.TryGetComponent<Player>(out Player player))
-        {
-            _audioSource = GetComponent<AudioSource>();
-            _audioSource.Play();
-            _audioSource.volume = 0;
-
-            StopCoroutine(DecreaseSound()); ;
-            var increaseSound = StartCoroutine(IncreaseSound());
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        StopCoroutine(IncreaseSound());
+        _audioSource = GetComponent<AudioSource>();
         _audioSource.Play();
-        var decreaseSound = StartCoroutine(DecreaseSound());
+        _audioSource.volume = 0;
+        StopCoroutine(ChangeSound()); ;
+        var sound = StartCoroutine(ChangeSound());
     }
 
-    private IEnumerator IncreaseSound()
+    public void StopPlaySound()
     {
-        while (_audioSource.volume < 1)
+        StopCoroutine(ChangeSound());
+        var sound = StartCoroutine(ChangeSound());
+    }
+
+    private IEnumerator ChangeSound()
+    {
+        if (_audioSource.volume == 0)
         {
-            _audioSource.volume = Mathf.MoveTowards(_audioSource.volume, _audioSource.maxDistance, _recoveryRate * Time.deltaTime);
-            yield return null;
+            while (_audioSource.volume < 1)
+            {
+                _audioSource.volume = Mathf.MoveTowards(_audioSource.volume, _audioSource.maxDistance, _recoveryRate * Time.deltaTime);
+                yield return null;
+            }
         }
-    }
-
-    private IEnumerator DecreaseSound()
-    {
-        while (_audioSource.volume > 0)
+        else
         {
-            _audioSource.volume = Mathf.MoveTowards(_audioSource.volume, _audioSource.maxDistance, _recoveryRate * Time.deltaTime *(-1));
-            yield return null;
+            while (_audioSource.volume > 0)
+            {
+                _audioSource.volume = Mathf.MoveTowards(_audioSource.volume, _audioSource.maxDistance, _recoveryRate * Time.deltaTime * (-1));
+                yield return null;
+            }
         }
     }
 }
